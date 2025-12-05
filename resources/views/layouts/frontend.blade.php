@@ -31,6 +31,11 @@
                             Bài viết
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('contact.*') ? 'active' : '' }}" href="{{ route('contact.index') }}">
+                            Liên hệ
+                        </a>
+                    </li>
                 </ul>
                 <ul class="navbar-nav">
                     @auth

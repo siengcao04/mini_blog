@@ -44,8 +44,27 @@
                     <img src="{{ Storage::url($post->thumbnail) }}" class="img-fluid rounded mb-4" alt="{{ $post->title }}">
                 @endif
 
+                @if($post->post_type === 'video' && $post->video_url)
+                    <div class="ratio ratio-16x9 mb-4">
+                        @if(str_contains($post->video_url, 'youtube.com') || str_contains($post->video_url, 'youtu.be'))
+                            @php
+                                preg_match('/(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]+)/', $post->video_url, $matches);
+                                $videoId = $matches[1] ?? '';
+                            @endphp
+                            @if($videoId)
+                                <iframe src="https://www.youtube.com/embed/{{ $videoId }}" allowfullscreen></iframe>
+                            @endif
+                        @else
+                            <video controls class="w-100">
+                                <source src="{{ $post->video_url }}" type="video/mp4">
+                                Trình duyệt của bạn không hỗ trợ video.
+                            </video>
+                        @endif
+                    </div>
+                @endif
+
                 <div class="content">
-                    {!! nl2br(e($post->content)) !!}
+                    {!! $post->content !!}
                 </div>
             </article>
 
@@ -133,6 +152,68 @@
                     @endforelse
                 </div>
             </section>
+
+            <!-- Bài viết liên quan -->
+            @if($relatedPosts->count() > 0)
+                <section class="related-posts mb-4">
+                    <h3 class="mb-3 border-bottom pb-2">
+                        <i class="bi bi-newspaper"></i> Bài viết liên quan
+                    </h3>
+                    <div class="row">
+                        @foreach($relatedPosts as $related)
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="row g-0">
+                                        @if($related->thumbnail)
+                                            <div class="col-4">
+                                                <img src="{{ Storage::url($related->thumbnail) }}" class="img-fluid h-100" style="object-fit: cover;" alt="{{ $related->title }}">
+                                            </div>
+                                        @endif
+                                        <div class="col-{{ $related->thumbnail ? '8' : '12' }}">
+                                            <div class="card-body p-2">
+                                                <h6 class="card-title mb-1">
+                                                    <a href="{{ route('posts.show', $related->slug) }}" class="text-decoration-none text-dark">
+                                                        {{ Str::limit($related->title, 60) }}
+                                                    </a>
+                                                </h6>
+                                                <p class="card-text small text-muted mb-0">
+                                                    <i class="bi bi-calendar"></i> {{ $related->published_at->format('d/m/Y') }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
+
+            <!-- Tin hot -->
+            @if($hotPosts->count() > 0)
+                <section class="hot-posts mb-4">
+                    <h3 class="mb-3 border-bottom pb-2">
+                        <i class="bi bi-fire text-danger"></i> Tin hot (Xem nhiều nhất)
+                    </h3>
+                    <div class="list-group">
+                        @foreach($hotPosts as $hot)
+                            <a href="{{ route('posts.show', $hot->slug) }}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-1">{{ Str::limit($hot->title, 70) }}</h6>
+                                        <small class="text-muted">
+                                            <i class="bi bi-eye"></i> {{ $hot->views }} lượt xem
+                                        </small>
+                                    </div>
+                                    @if($hot->thumbnail)
+                                        <img src="{{ Storage::url($hot->thumbnail) }}" alt="{{ $hot->title }}" style="width: 60px; height: 60px; object-fit: cover;" class="rounded">
+                                    @endif
+                                </div>
+                            </a>
+                        @endforeach
+                    </div>
+                </section>
+            @endif
         </div>
     </div>
 </div>

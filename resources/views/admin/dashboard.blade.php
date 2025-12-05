@@ -9,6 +9,74 @@
     </div>
 </div>
 
+<!-- Bộ lọc thời gian -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form action="{{ route('admin.dashboard') }}" method="GET" class="row g-3">
+            <div class="col-md-4">
+                <label for="start_date" class="form-label">Từ ngày</label>
+                <input type="date" class="form-control" id="start_date" name="start_date" value="{{ $startDate }}">
+            </div>
+            <div class="col-md-4">
+                <label for="end_date" class="form-label">Đến ngày</label>
+                <input type="date" class="form-control" id="end_date" name="end_date" value="{{ $endDate }}">
+            </div>
+            <div class="col-md-4 d-flex align-items-end">
+                <button type="submit" class="btn btn-primary">
+                    <i class="bi bi-funnel"></i> Lọc
+                </button>
+                <a href="{{ route('admin.dashboard') }}" class="btn btn-secondary ms-2">
+                    <i class="bi bi-arrow-clockwise"></i> Đặt lại
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Thống kê theo thời gian -->
+<div class="card mb-4">
+    <div class="card-header">
+        <h5 class="mb-0">Thống kê từ {{ \Carbon\Carbon::parse($startDate)->format('d/m/Y') }} đến {{ \Carbon\Carbon::parse($endDate)->format('d/m/Y') }}</h5>
+    </div>
+    <div class="card-body">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <div class="d-flex align-items-center">
+                    <div class="bg-primary text-white rounded p-3 me-3">
+                        <i class="bi bi-file-earmark-plus fs-3"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-muted">Bài viết mới</h6>
+                        <h3 class="mb-0">{{ $dateStats['posts_in_period'] }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex align-items-center">
+                    <div class="bg-success text-white rounded p-3 me-3">
+                        <i class="bi bi-chat-dots fs-3"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-muted">Bình luận mới</h6>
+                        <h3 class="mb-0">{{ $dateStats['comments_in_period'] }}</h3>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="d-flex align-items-center">
+                    <div class="bg-info text-white rounded p-3 me-3">
+                        <i class="bi bi-person-plus fs-3"></i>
+                    </div>
+                    <div>
+                        <h6 class="mb-0 text-muted">Người dùng mới</h6>
+                        <h3 class="mb-0">{{ $dateStats['users_in_period'] }}</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row g-4 mb-4">
     <div class="col-md-3">
         <div class="card text-white bg-primary">

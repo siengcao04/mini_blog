@@ -62,6 +62,9 @@
                 <a href="{{ route('admin.comments.index') }}" class="nav-link {{ request()->routeIs('admin.comments.*') ? 'active' : '' }}">
                     <i class="bi bi-chat-dots"></i> Bình luận
                 </a>
+                <a href="{{ route('admin.contacts.index') }}" class="nav-link {{ request()->routeIs('admin.contacts.*') ? 'active' : '' }}">
+                    <i class="bi bi-envelope"></i> Liên hệ
+                </a>
                 
                 <div class="text-muted small mt-3 mb-2 px-3">HỆ THỐNG</div>
                 
@@ -127,6 +130,7 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    @yield('scripts')
     @stack('scripts')
 </body>
 </html>

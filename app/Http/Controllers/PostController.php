@@ -45,7 +45,14 @@ class PostController extends Controller
         $categories = Category::all();
         $tags = Tag::all();
 
-        return view('posts.index', compact('posts', 'categories', 'tags'));
+        // Lấy tin nổi bật
+        $featuredPosts = Post::featured()
+            ->published()
+            ->latest('published_at')
+            ->limit(3)
+            ->get();
+
+        return view('posts.index', compact('posts', 'categories', 'tags', 'featuredPosts'));
     }
 
     /**
@@ -61,6 +68,20 @@ class PostController extends Controller
         // Tăng lượt xem
         $post->incrementViews();
 
-        return view('posts.show', compact('post'));
+        // Lấy bài viết liên quan (cùng danh mục, khác bài hiện tại)
+        $relatedPosts = Post::where('category_id', $post->category_id)
+            ->where('id', '!=', $post->id)
+            ->published()
+            ->latest('published_at')
+            ->limit(5)
+            ->get();
+
+        // Lấy bài viết hot (nhiều lượt xem nhất)
+        $hotPosts = Post::published()
+            ->orderBy('views', 'desc')
+            ->limit(5)
+            ->get();
+
+        return view('posts.show', compact('post', 'relatedPosts', 'hotPosts'));
     }
 }

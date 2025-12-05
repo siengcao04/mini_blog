@@ -46,10 +46,13 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'post_type' => 'nullable|in:text,image,video',
             'excerpt' => 'nullable|string|max:500',
             'content' => 'required|string',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'video_url' => 'nullable|url',
             'status' => 'required|in:draft,pending,published',
+            'is_featured' => 'nullable|boolean',
             'tags' => 'nullable|array',
             'tags.*' => 'exists:tags,id',
         ], [
@@ -57,15 +60,18 @@ class PostController extends Controller
             'title.max' => 'Tiêu đề không được vượt quá :max ký tự.',
             'category_id.required' => 'Vui lòng chọn danh mục.',
             'category_id.exists' => 'Danh mục không tồn tại.',
+            'post_type.in' => 'Loại tin tức không hợp lệ.',
             'content.required' => 'Nội dung không được để trống.',
             'thumbnail.image' => 'File phải là hình ảnh.',
             'thumbnail.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif.',
             'thumbnail.max' => 'Kích thước hình ảnh không được vượt quá 2MB.',
+            'video_url.url' => 'URL video không hợp lệ.',
             'status.required' => 'Vui lòng chọn trạng thái.',
             'status.in' => 'Trạng thái không hợp lệ.',
         ]);
 
         $validated['user_id'] = auth()->id();
+        $validated['is_featured'] = $request->has('is_featured');
 
         if ($request->hasFile('thumbnail')) {
             $validated['thumbnail'] = $request->file('thumbnail')->store('thumbnails', 'public');
@@ -103,10 +109,13 @@ class PostController extends Controller
         $validated = $request->validate([
             'title' => 'required|string|max:255',
             'category_id' => 'required|exists:categories,id',
+            'post_type' => 'nullable|in:text,image,video',
             'excerpt' => 'nullable|string|max:500',
             'content' => 'required|string',
             'thumbnail' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'video_url' => 'nullable|url',
             'status' => 'required|in:draft,pending,published',
+            'is_featured' => 'nullable|boolean',
             'tags' => 'nullable|array',
             'tags.*' => 'exists:tags,id',
         ], [
@@ -114,13 +123,17 @@ class PostController extends Controller
             'title.max' => 'Tiêu đề không được vượt quá :max ký tự.',
             'category_id.required' => 'Vui lòng chọn danh mục.',
             'category_id.exists' => 'Danh mục không tồn tại.',
+            'post_type.in' => 'Loại tin tức không hợp lệ.',
             'content.required' => 'Nội dung không được để trống.',
             'thumbnail.image' => 'File phải là hình ảnh.',
             'thumbnail.mimes' => 'Hình ảnh phải có định dạng: jpeg, png, jpg, gif.',
             'thumbnail.max' => 'Kích thước hình ảnh không được vượt quá 2MB.',
+            'video_url.url' => 'URL video không hợp lệ.',
             'status.required' => 'Vui lòng chọn trạng thái.',
             'status.in' => 'Trạng thái không hợp lệ.',
         ]);
+
+        $validated['is_featured'] = $request->has('is_featured');
 
         if ($request->hasFile('thumbnail')) {
             if ($post->thumbnail) {

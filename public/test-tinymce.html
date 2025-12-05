@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test TinyMCE</title>
+    <style>
+        body {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <h1>Test TinyMCE Editor</h1>
+    <p>Nếu bạn thấy editor bên dưới với toolbar, TinyMCE đã hoạt động!</p>
+    
+    <form>
+        <label for="content">Nội dung:</label>
+        <textarea id="content" name="content">
+            <p>Đây là nội dung mẫu. Hãy thử <strong>in đậm</strong>, <em>in nghiêng</em>!</p>
+            <ul>
+                <li>Mục 1</li>
+                <li>Mục 2</li>
+            </ul>
+        </textarea>
+    </form>
+
+    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: '#content',
+            height: 400,
+            menubar: true,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | blocks fontsize | ' +
+                'bold italic underline strikethrough | forecolor backcolor | ' +
+                'alignleft aligncenter alignright alignjustify | ' +
+                'bullist numlist outdent indent | ' +
+                'link image media table | removeformat code fullscreen | help',
+            content_style: 'body { font-family:Arial,sans-serif; font-size:14px; line-height:1.6; }',
+            branding: false,
+            promotion: false,
+            setup: function(editor) {
+                editor.on('init', function() {
+                    console.log('✅ TinyMCE đã khởi tạo thành công!');
+                    alert('TinyMCE hoạt động tốt!');
+                });
+            }
+        });
+    </script>
+</body>
+</html>

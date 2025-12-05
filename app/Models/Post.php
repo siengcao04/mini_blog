@@ -12,10 +12,13 @@ class Post extends Model
         'category_id',
         'title',
         'slug',
+        'post_type',
         'excerpt',
         'content',
         'thumbnail',
+        'video_url',
         'status',
+        'is_featured',
         'views',
         'published_at',
     ];
@@ -23,6 +26,7 @@ class Post extends Model
     protected $casts = [
         'published_at' => 'datetime',
         'views' => 'integer',
+        'is_featured' => 'boolean',
     ];
 
     /**
@@ -86,6 +90,11 @@ class Post extends Model
     public function scopeDraft($query)
     {
         return $query->where('status', 'draft');
+    }
+
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
     }
 
     /**

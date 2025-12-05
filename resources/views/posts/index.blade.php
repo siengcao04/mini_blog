@@ -6,6 +6,36 @@
 <div class="container">
     <div class="row">
         <div class="col-lg-8">
+            <!-- Tin nổi bật -->
+            @if($featuredPosts->count() > 0)
+                <div class="mb-5">
+                    <h2 class="mb-3 border-bottom pb-2">
+                        <i class="bi bi-star-fill text-warning"></i> Tin nổi bật
+                    </h2>
+                    <div class="row">
+                        @foreach($featuredPosts as $featured)
+                            <div class="col-md-4 mb-3">
+                                <div class="card h-100">
+                                    @if($featured->thumbnail)
+                                        <img src="{{ Storage::url($featured->thumbnail) }}" class="card-img-top" alt="{{ $featured->title }}" style="height: 150px; object-fit: cover;">
+                                    @endif
+                                    <div class="card-body">
+                                        <h6 class="card-title">
+                                            <a href="{{ route('posts.show', $featured->slug) }}" class="text-decoration-none text-dark">
+                                                {{ Str::limit($featured->title, 50) }}
+                                            </a>
+                                        </h6>
+                                        <p class="card-text small text-muted">
+                                            <i class="bi bi-calendar"></i> {{ $featured->published_at->format('d/m/Y') }}
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+                </div>
+            @endif
+
             <h1 class="mb-4">Bài viết mới nhất</h1>
 
             @if(session('success'))

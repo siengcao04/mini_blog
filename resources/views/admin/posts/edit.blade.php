@@ -59,6 +59,25 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+
+                    <div class="mb-3">
+                        <label for="post_type" class="form-label">Loại tin tức</label>
+                        <select name="post_type" id="post_type" class="form-select @error('post_type') is-invalid @enderror">
+                            <option value="text" {{ old('post_type', $post->post_type ?? 'text') === 'text' ? 'selected' : '' }}>Tin tức thường</option>
+                            <option value="image" {{ old('post_type', $post->post_type ?? 'text') === 'image' ? 'selected' : '' }}>Tin ảnh</option>
+                            <option value="video" {{ old('post_type', $post->post_type ?? 'text') === 'video' ? 'selected' : '' }}>Tin video</option>
+                        </select>
+                        @error('post_type')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" name="is_featured" value="1" id="is_featured" class="form-check-input" {{ old('is_featured', $post->is_featured ?? false) ? 'checked' : '' }}>
+                        <label for="is_featured" class="form-check-label">
+                            <i class="bi bi-star text-warning"></i> Tin nổi bật
+                        </label>
+                    </div>
                 </div>
                 <div class="card-footer">
                     <button type="submit" class="btn btn-primary w-100">
@@ -126,7 +145,65 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card mb-3" id="video-url-card" style="display: {{ old('post_type', $post->post_type ?? 'text') === 'video' ? 'block' : 'none' }};">
+                <div class="card-header">
+                    <h5 class="mb-0">Video</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-0">
+                        <label for="video_url" class="form-label">URL Video</label>
+                        <input type="url" name="video_url" id="video_url" class="form-control @error('video_url') is-invalid @enderror" value="{{ old('video_url', $post->video_url) }}" placeholder="https://www.youtube.com/watch?v=...">
+                        @error('video_url')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                        <small class="text-muted">Hỗ trợ: YouTube, Vimeo</small>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </form>
+@endsection
+
+@section('scripts')
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Khởi tạo TinyMCE
+        tinymce.init({
+            selector: '#content',
+            height: 500,
+            menubar: true,
+            plugins: [
+                'advlist', 'autolink', 'lists', 'link', 'image', 'charmap', 'preview',
+                'anchor', 'searchreplace', 'visualblocks', 'code', 'fullscreen',
+                'insertdatetime', 'media', 'table', 'help', 'wordcount'
+            ],
+            toolbar: 'undo redo | blocks fontsize | ' +
+                'bold italic underline strikethrough | forecolor backcolor | ' +
+                'alignleft aligncenter alignright alignjustify | ' +
+                'bullist numlist outdent indent | ' +
+                'link image media table | removeformat code fullscreen | help',
+            content_style: 'body { font-family:Arial,sans-serif; font-size:14px; line-height:1.6; }',
+            branding: false,
+            promotion: false,
+            setup: function(editor) {
+                editor.on('init', function() {
+                    console.log('TinyMCE đã khởi tạo thành công!');
+                });
+            }
+        });
+
+        // Hiển thị/ẩn trường video URL dựa trên loại tin
+        document.getElementById('post_type').addEventListener('change', function() {
+            const videoCard = document.getElementById('video-url-card');
+            if (this.value === 'video') {
+                videoCard.style.display = 'block';
+            } else {
+                videoCard.style.display = 'none';
+            }
+        });
+    });
+</script>
 @endsection
